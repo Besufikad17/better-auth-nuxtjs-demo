@@ -43,13 +43,6 @@ export default {
       "4xl": "1920px",
       // => @media (min-width: 1920px) { ... }
     },
-    fontFamily: {
-      body: ["Poppins"],
-      diplay: ["Poppins"],
-      sans: ["Poppins"],
-      serif: ["Poppins"],
-      poppin: ["Poppins"],
-    },
     extend: {
       animation: {
         marquee: "marquee 3s linear infinite",
