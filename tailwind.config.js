@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [],
+  darkMode: 'class',
   theme: {
     screens: {
       "5xs": "320px",
@@ -68,6 +69,21 @@ export default {
         "3xl": "0 35px 60px -15px rgba(0, 0, 0, 0.3)",
         opaq: "0 4px 16px 6px rgba(0,0,0,0.4)",
         full: "0 3px 1px -2px rgba(0,0,0, 0.2), 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12) ",
+      },
+      colors: {
+        primary: {
+          '50': '#f6f5f5',
+          '100': '#e8e5e5',
+          '200': '#d4cfcd',
+          '300': '#b5adab',
+          '400': '#908480',
+          '500': '#756a65',
+          '600': '#635a57',
+          '700': '#544d4a',
+          '800': '#494441',
+          '900': '#3f3c3a',
+          '950': '#2d2a28',
+        }
       }
     }
   },
