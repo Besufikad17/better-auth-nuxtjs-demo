@@ -1,8 +1,13 @@
 <script setup lang="ts">
     import { ref } from "vue";
+    import { client } from "~/composables/functions/client"; 
+    import type { AuthProvider } from "~/types/auth";
 
     const authType = ref("sign-in");
     const isLoading = ref(false);
+    const showToast = ref(false);
+    const toastType = ref("message");
+    const toastMessage = ref("");
 
     const email = ref("");
     const password = ref("");
@@ -13,18 +18,78 @@
     const confirmPassword = ref("");
     const image = ref();
     
-    const login = () => {
+    const login = async(provider?: string) => {
         isLoading.value = true;
-        setTimeout(() => {
+        if(provider) {
+            switch(provider) {
+                case "github":
+                    loginWithProvider("github");
+                    break;
+                case "google":
+                    loginWithProvider("google");
+                    break;
+                default:
+                    break;
+            }
+        }else {
+            const { data, error } = await client.signIn.email({
+                email: email.value,
+                password: password.value,
+                callbackURL: "/"
+            });
+
             isLoading.value = false;
-        }, 2000);
+            if(error) {
+                showToast.value = true;
+                toastType.value = "error";
+                toastMessage.value = error.message!;
+            }else {
+                showToast.value = true;
+                toastType.value = "success";
+                toastMessage.value = "Signed In successfully!";
+                setTimeout(async() => {
+                    await navigateTo("/user");
+                }, 3000);
+            }
+        }
     };
 
-    const signup = () => {
+    const loginWithProvider = (provider: AuthProvider) => {
         isLoading.value = true;
-        setTimeout(() => {
-            isLoading.value = false;
-        }, 2000);
+        // FIXME Fix login with provider bug
+        client.signIn.social({
+            provider: provider
+        });
+    };
+
+    const signUpWithProvider = (provider: AuthProvider) => {
+        isLoading.value = true;
+        // TODO: Implement sign up with provider
+    }
+
+    const signup = async() => {
+        isLoading.value = true;
+        const { data, error } = await client.signUp.email({
+            email: email.value,
+            password: password.value,
+            name: firstName.value + " " + lastName.value,
+            image: image.value,
+            callbackURL: "/"
+        });
+
+        isLoading.value = false;
+        if(error) {
+            showToast.value = true;
+            toastType.value = "error";
+            toastMessage.value = error.message!;
+        }else {
+            showToast.value = true;
+            toastType.value = "success";
+            toastMessage.value = "Account created successfully!";
+            setTimeout(async() => {
+                await navigateTo("/user");
+            }, 3000);
+        }
     };
 </script>
 
@@ -33,6 +98,7 @@
         bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px]
         dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]
     ">
+        <Toast v-if="showToast" :type="toastType" :message="toastMessage" @close="showToast = false" class="fixed top-6 right-6" />
         <div class="flex flex-col p-8">
             <div class="flex items-center">
                 <span 
@@ -81,12 +147,12 @@
                         class="text-sm dark:text-white cursor-pointer accent-black dark:accent-white bg-transparent border dark:border-white"
                     />
                     <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
-                        :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="login"
+                        :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="() => login()"
                     >
                         Login
                         <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
                     </button>
-                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white">
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => login('github')">
                         <Icon name="entypo-social:github" />
                         Continue with Github
                     </button>
@@ -139,7 +205,7 @@
                     </Textfield>
                     <div class="flex flex-col gap-2">
                         <label for="image" class="text-sm dark:text-white mb-2">Profile Image (Optional)</label>
-                        <input name="image" type="file" class="px-2 py-1 w-full border border-gray-300 dark:border-primary-700 shadow-sm rounded-sm" />
+                        <input name="image" type="file" v-on:change="(e: any) => image = e.target.files[0].name" ass="px-2 py-1 w-full border border-gray-300 dark:border-primary-700 shadow-sm rounded-sm" />
                     </div>
                     <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
                         :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="signup"

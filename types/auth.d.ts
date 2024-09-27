@@ -1,0 +1,1 @@
+export type AuthProvider = "apple" | "discord" | "facebook" | "github" | "google" | "spotify" | "twitch" | "twitter";

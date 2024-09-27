@@ -12,7 +12,8 @@
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@vueuse/core": "^11.1.0",
-    "nuxt": "^3.13.0",
+    "better-auth": "^0.0.10-beta.27",
+    "nuxt": "^3.13.2",
     "nuxt-icon": "^1.0.0-beta.7",
     "vue": "latest",
     "vue-router": "latest"
