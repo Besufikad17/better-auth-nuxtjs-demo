@@ -2,11 +2,16 @@
     import { client } from "~/composables/functions/client"; 
 
     const session = client.useSession();
+
+    const logout = async () => {
+        await client.signOut();
+        await navigateTo("/auth/sign-in");
+    };
 </script>
 
 <template>
     <div>
-        <!-- FIXME Get user info -->
-        <h1>User: {{ session.data?.user }}</h1>
+        <h1>User: {{ session.data?.user.name }}</h1>
+        <button @click="logout">Logout</button>
     </div>
 </template>

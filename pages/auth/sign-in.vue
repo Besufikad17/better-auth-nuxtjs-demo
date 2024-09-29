@@ -18,48 +18,47 @@
     const confirmPassword = ref("");
     const image = ref();
     
-    const login = async(provider?: string) => {
+    const login = async() => {
         isLoading.value = true;
-        if(provider) {
-            switch(provider) {
-                case "github":
-                    loginWithProvider("github");
-                    break;
-                case "google":
-                    loginWithProvider("google");
-                    break;
-                default:
-                    break;
-            }
-        }else {
-            const { data, error } = await client.signIn.email({
-                email: email.value,
-                password: password.value,
-                callbackURL: "/"
-            });
+        const { data, error } = await client.signIn.email({
+            email: email.value,
+            password: password.value,
+            callbackURL: "/user"
+        });
 
-            isLoading.value = false;
-            if(error) {
-                showToast.value = true;
-                toastType.value = "error";
-                toastMessage.value = error.message!;
-            }else {
-                showToast.value = true;
-                toastType.value = "success";
-                toastMessage.value = "Signed In successfully!";
-                setTimeout(async() => {
-                    await navigateTo("/user");
-                }, 3000);
-            }
+        isLoading.value = false;
+        if(error) {
+            showToast.value = true;
+            toastType.value = "error";
+            toastMessage.value = error.message!;
+        }else {
+            showToast.value = true;
+            toastType.value = "success";
+            toastMessage.value = "Signed In successfully!";
+            setTimeout(async() => {
+                await navigateTo("/user");
+            }, 3000);
         }
     };
 
-    const loginWithProvider = (provider: AuthProvider) => {
+    const loginWithPasskey = async() => {
+        await client.signIn.passkey();
+    }
+
+    const loginWithProvider = async(provider: AuthProvider) => {
         isLoading.value = true;
-        // FIXME Fix login with provider bug
-        client.signIn.social({
-            provider: provider
+       
+        const { data, error } = await client.signIn.social({
+            provider: provider,
+            callbackURL: "/user"
         });
+
+        isLoading.value = false;
+        if(error) {
+            showToast.value = true;
+            toastType.value = "error";
+            toastMessage.value = error.message!;
+        }
     };
 
     const signUpWithProvider = (provider: AuthProvider) => {
@@ -74,7 +73,7 @@
             password: password.value,
             name: firstName.value + " " + lastName.value,
             image: image.value,
-            callbackURL: "/"
+            callbackURL: "/user"
         });
 
         isLoading.value = false;
@@ -137,7 +136,7 @@
                         <template #label>
                             <div class="flex items-center justify-between w-full mb-2">
                                 <label for="email" class="text-sm dark:text-white">Password</label>
-                                <NuxtLink to="/forgot-password" class="text-sm dark:text-white underline">Forgot your password?</NuxtLink>
+                                <NuxtLink to="/auth/forgot-password" class="text-sm dark:text-white underline">Forgot your password?</NuxtLink>
                             </div>
                         </template>
                     </Textfield>
@@ -152,15 +151,15 @@
                         Login
                         <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
                     </button>
-                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => login('github')">
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('github')">
                         <Icon name="entypo-social:github" />
                         Continue with Github
                     </button>
-                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white">
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('google')">
                         <Icon name="logos:google-icon" />
                         Continue with Google
                     </button>
-                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white">
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithPasskey()">
                         <Icon name="lucide:key" />
                         Continue with Passkey
                     </button>

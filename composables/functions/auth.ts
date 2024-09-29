@@ -1,4 +1,6 @@
 import { betterAuth } from "better-auth";
+import { passkey } from "better-auth/plugins";
+import { sendResetEmail } from "./email";
 
 export const auth = betterAuth({
     database: {
@@ -6,9 +8,15 @@ export const auth = betterAuth({
         url: process.env.DATABASE_URL as string,
     },
     emailAndPassword: {  
-        enabled: true
+        enabled: true,
+        async sendResetPassword(url, user) { 
+            await sendResetEmail(user.email, url)
+        }
     },
-    socialProvider: {
+    plugins: [
+        passkey(),
+    ],
+    socialProviders: {
         github: { 
             clientId: process.env.GITHUB_CLIENT_ID as string, 
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string, 

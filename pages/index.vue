@@ -1,14 +1,14 @@
 <script setup lang="ts">
-    const FEATURES = [
-        "Email & Password", 
-        "Organization | Teams", 
-        "Passkeys", 
-        "Multi Factor",
-        "Password Reset",
-        "Role & Permissions",
-        "Rate Limiting",
-        "Session Management"
-    ];
+  const FEATURES = [
+    "Email & Password", 
+    "Organization | Teams", 
+    "Passkeys", 
+    "Multi Factor",
+    "Password Reset",
+    "Role & Permissions",
+    "Rate Limiting",
+    "Session Management"
+  ];
 </script>
 
 <template>
@@ -23,7 +23,7 @@
         <div class="flex flex-wrap justify-center gap-2 md:w-1/2">
             <span v-for="(feature, index) in FEATURES" :key="index" class="text-xs text-gray-500 hover:text-gray-800 dark:hover:text-gray-100 hover:underline cursor-pointer">{{ feature }}.</span>
         </div>
-        <NuxtLink to="/sign-in">
+        <NuxtLink to="/auth/sign-in">
           <button class="bg-primary-950 dark:bg-white dark:text-black hover:bg-primary-900 flex items-center gap-2 text-gray-100 px-4 py-2 text-sm">
               <Icon name="lucide:log-in" />
               Sign In
