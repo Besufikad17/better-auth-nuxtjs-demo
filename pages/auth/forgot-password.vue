@@ -1,7 +1,10 @@
 <script setup lang="ts">
     import { ref } from "vue";
+    import { render } from "@vue-email/render";
     import { client } from "~/composables/functions/client";
+    import Email from "~/components/Email.vue";
 
+    const config = useRuntimeConfig();
     const email = ref("");
     const emailSent = ref(false);
     const isLoading = ref(false);
@@ -9,15 +12,38 @@
     const toastType = ref("success");
     const toastMessage = ref("");
 
-    // const mail = useMail();
-
     const resetPassword = async () => {
         isLoading.value = true;
         try {
+            const html = await render(Email,{
+                body: "We received a request to reset your password for your Better Auth account. If you didn't make this request, you can safely ignore this email.",
+                link: config.public.NODE_ENV === "development" ? "http://localhost:3000/auth/reset-password" : "https://betterauth.vercel.app/auth/reset-password",
+                receiver: email.value
+            },{
+                pretty: true,
+            });
+
             await client.forgetPassword({
                 email: email.value,
                 redirectTo: "/reset-password"
             });
+
+            const { data: emailRes, error } = await useFetch('/api/verification/send-email', {
+                method: 'POST',
+                body: {
+                    source: "",
+                    head: {
+                        to: email.value,
+                        subject: "Reset password",
+                    },
+                    body: html
+                }
+            });
+
+            if (error) {
+                throw new Error(error.value ? error.value.message : "Failed to send email");
+            }
+
             showToast.value = true;
             toastType.value = "success";
             toastMessage.value = "Password reset link sent to your email";
@@ -53,17 +79,17 @@
                         <label for="email" class="text-sm dark:text-white mb-2">Email</label>
                     </template>
                 </Textfield>
-                <button v-if="emailSent" class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="emailSent = false">
+                <NuxtLink to="/auth/forget-password" v-if="emailSent" class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="emailSent = false">
                         <Icon name="lucide:arrow-left" />
                         Back to reset password
-                </button>
+                </NuxtLink>
                 <button v-else class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
                     :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="() => resetPassword()"
                 >
                     Send reset link
                     <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
                 </button>
-                <NuxtLink v-if="!emailSent" to="/auth/forgot-password" class="flex items-center justify-center dark:text-gray-100 hover:underline p-2">Back to sign in</NuxtLink>
+                <NuxtLink v-if="!emailSent" to="/auth/sign-in" class="flex items-center justify-center dark:text-gray-100 hover:underline p-2">Back to sign in</NuxtLink>
             </div>
         </div>
     </div>

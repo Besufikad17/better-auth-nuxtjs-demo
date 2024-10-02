@@ -19,9 +19,15 @@
                 throw new Error("Password must be at least 6 characters");
             }
             
-            await client.resetPassword({
+            const { data, error } = await client.resetPassword({
                 newPassword: password.value,
             });
+
+            // FIXME: invalid token error
+            if(error) {
+                throw new Error(error ? error.message : "Failed to reset password");
+            }
+            console.log(data);
             showToast.value = true;
             toastType.value = "success";
             toastMessage.value = "Password reset link sent to your email";

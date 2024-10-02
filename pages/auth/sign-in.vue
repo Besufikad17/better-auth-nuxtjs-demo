@@ -61,11 +61,6 @@
         }
     };
 
-    const signUpWithProvider = (provider: AuthProvider) => {
-        isLoading.value = true;
-        // TODO: Implement sign up with provider
-    }
-
     const signup = async() => {
         isLoading.value = true;
         const { data, error } = await client.signUp.email({
@@ -212,11 +207,11 @@
                         Create an account
                         <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
                     </button>
-                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white">
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('github')">
                         <Icon name="entypo-social:github" />
                         Continue with Github
                     </button>
-                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white">
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('google')">
                         <Icon name="logos:google-icon" />
                         Continue with Google
                     </button>

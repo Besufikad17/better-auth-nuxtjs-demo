@@ -3,28 +3,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/tailwindcss',
-    'nuxt-icon',
-    'nuxt-mail'
+    'nuxt-icon'
   ],
   runtimeConfig: {
-    mail: {
-      smtp: {
-        host: process.env.NUXT_MAIL_SMPT,
-        port: parseInt(process.env.NUXT_MAIL_PORT as string)
-      },
+    apiSecret: {
+      EMAIL_USER: process.env.EMAIL_USER,
+      EMAIL_PASS: process.env.EMAIL_PASS
     },
-  },
-  // runtimeConfig: {
-  //   mail: {
-  //     smtp: {
-  //       host: process.env.NUXT_MAIL_SMPT,
-  //       port: parseInt(process.env.NUXT_MAIL_PORT as string),
-  //       secure: true,
-  //       auth: {
-  //         user: process.env.NUXT_MAIL_USERNAME,
-  //         pass: process.env.NUXT_MAIL_PASSWORD
-  //       }
-  //     }
-  //   }
-  // }
+    public: {
+      NODE_ENV: process.env.NODE_ENV
+    }
+  }
 });
