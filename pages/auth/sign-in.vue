@@ -88,7 +88,7 @@
 </script>
 
 <template>
-    <div class="flex items-center justify-center min-h-screen dark:bg-black bg-white overflow-auto
+    <div class="flex items-center justify-center md:h-[calc(100vh-62px)] dark:bg-black bg-white overflow-auto
         bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px]
         dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]
     ">
@@ -203,7 +203,7 @@
                     </Textfield>
                     <div class="flex flex-col gap-2">
                         <label for="image" class="text-sm dark:text-white mb-2">Profile Image (Optional)</label>
-                        <input name="image" type="file" v-on:change="(e: any) => image = e.target.files[0].name" ass="px-2 py-1 w-full border border-gray-300 dark:border-primary-700 shadow-sm rounded-sm" />
+                        <input name="image" type="file" v-on:change="(e: any) => image = e.target.files[0].name" class="px-2 py-1 w-full text-gray-300 dark:text-primary-700 border border-gray-300 dark:border-primary-700 shadow-sm rounded-sm" />
                     </div>
                     <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
                         :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="signup"

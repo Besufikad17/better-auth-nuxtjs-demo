@@ -7,9 +7,11 @@
     <div>
         <div class="flex items-center justify-center dark:bg-black">
             <div class="flex items-center justify-between border-b border-gray-300 p-2 w-full lg:w-2/3">
-                <div class="flex items-center gap-3">
-                    <Logo class="text-black dark:text-white" />
-                    <span class="dark:text-gray-200">BETTER-AUTH.</span>
+                <div class="flex items-center gap-2">
+                    <Icon name="logo" />
+                    <NuxtLink to="/">
+                        <span class="dark:text-gray-200">BETTER-AUTH.</span>
+                    </NuxtLink>
                 </div>
                 <client-only>
                     <div class="dark:text-gray-200 hover:bg-gray-300 cursor-pointer dark:hover:bg-primary-800 p-2 rounded-sm flex items-center justify-center">

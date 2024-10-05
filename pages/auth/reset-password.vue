@@ -12,11 +12,8 @@
     const resetPassword = async () => {
         isLoading.value = true;
         try {
-            if(password.value.length < 6) {
-                if(password.value !== confirmPassword.value) {
-                    throw new Error("Passwords do not match");
-                }
-                throw new Error("Password must be at least 6 characters");
+            if(password.value !== confirmPassword.value) {
+                throw new Error("Passwords do not match");
             }
             
             const { data, error } = await client.resetPassword({
@@ -44,7 +41,7 @@
 </script>
 
 <template>
-    <div class="flex items-center justify-center min-h-screen dark:bg-black bg-white overflow-auto">
+    <div class="flex items-center justify-center md:h-[calc(100vh-62px)] dark:bg-black bg-white overflow-auto">
         <Toast v-if="showToast" :type="toastType" :message="toastMessage" @close="showToast = false" class="fixed top-6 right-6" />
         <div class="flex flex-col p-8">
             <div class="flex flex-col gap-4 p-4 border bg-white dark:bg-black border-gray-300 dark:border-primary-700">
@@ -67,7 +64,7 @@
                 <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
                     :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="() => resetPassword()"
                 >
-                    Send reset link
+                    Reset Password
                     <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
                 </button>
             </div>

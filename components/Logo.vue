@@ -4,7 +4,7 @@
         height="45"
         viewBox="0 0 60 45"
         fill="none"
-        className="w-5 h-5"
+        className="bg-white dark:bg-black w-5 h-5"
         xmlns="http://www.w3.org/2000/svg"
     >
         <path

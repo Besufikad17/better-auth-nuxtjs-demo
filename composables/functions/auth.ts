@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { passkey } from "better-auth/plugins";
-import { Pool } from "pg";
+import Pool from "pg-pool";
 import { sendResetEmail } from "./email";
 
 export const auth = betterAuth({
