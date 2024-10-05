@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "@libsql/kysely-libsql": "^0.4.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@types/nodemailer": "^6.4.16",
     "@vitejs/plugin-vue": "^5.1.4",
@@ -17,7 +19,7 @@
     "@vue-email/render": "^0.0.9",
     "@vue-email/tailwind": "^0.1.9",
     "@vueuse/core": "^11.1.0",
-    "better-auth": "^0.0.10-beta.27",
+    "better-auth": "^0.2.8-beta.12",
     "handlebars": "^4.7.8",
     "nodemailer": "^6.9.15",
     "nuxt": "^3.13.2",
@@ -26,5 +28,8 @@
     "vue": "latest",
     "vue-router": "latest"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "devDependencies": {
+    "@types/pg": "^8.11.10"
+  }
 }

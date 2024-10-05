@@ -8,7 +8,7 @@
         <div class="flex items-center justify-center dark:bg-black">
             <div class="flex items-center justify-between border-b border-gray-300 p-2 w-full lg:w-2/3">
                 <div class="flex items-center gap-3">
-                    <span class="flex items-center justify-center p-2 bg-gray-200 text-xs">B.</span>
+                    <Logo class="text-black dark:text-white" />
                     <span class="dark:text-gray-200">BETTER-AUTH.</span>
                 </div>
                 <client-only>

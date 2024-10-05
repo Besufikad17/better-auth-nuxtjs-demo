@@ -154,6 +154,10 @@
                         <Icon name="logos:google-icon" />
                         Continue with Google
                     </button>
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('discord')">
+                        <Icon name="logos:discord-icon" />
+                        Continue with Discord
+                    </button>
                     <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithPasskey()">
                         <Icon name="lucide:key" />
                         Continue with Passkey
@@ -214,6 +218,10 @@
                     <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('google')">
                         <Icon name="logos:google-icon" />
                         Continue with Google
+                    </button>
+                    <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="() => loginWithProvider('discord')">
+                        <Icon name="logos:discord-icon" />
+                        Continue with Discord
                     </button>
                 </div>
                 <div class="flex items-center justify-center border-t border-gray-300 dark:border-primary-700 p-4">

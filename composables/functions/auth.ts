@@ -1,12 +1,12 @@
 import { betterAuth } from "better-auth";
 import { passkey } from "better-auth/plugins";
+import { Pool } from "pg";
 import { sendResetEmail } from "./email";
 
 export const auth = betterAuth({
-    database: {
-        provider: "postgres",
-        url: process.env.DATABASE_URL as string,
-    },
+    database: new Pool({
+        connectionString: process.env.DATABASE_URL as string
+    }),
     emailAndPassword: {  
         enabled: true,
         async sendResetPassword(url, user) { 
@@ -17,6 +17,10 @@ export const auth = betterAuth({
         passkey(),
     ],
     socialProviders: {
+        discord: {
+            clientId: process.env.DISCORD_CLIENT_ID as string,
+            clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+        },
         github: { 
             clientId: process.env.GITHUB_CLIENT_ID as string, 
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string, 
