@@ -20,7 +20,6 @@
                 newPassword: password.value,
             });
 
-            // FIXME: invalid token error
             if(error) {
                 throw new Error(error ? error.message : "Failed to reset password");
             }

@@ -1,47 +1,26 @@
 <script setup lang="ts">
     import { ref } from "vue";
-    import { render } from "@vue-email/render";
     import { client } from "~/composables/functions/client";
-    import Email from "~/components/Email.vue";
 
-    const config = useRuntimeConfig();
     const email = ref("");
     const emailSent = ref(false);
+    
     const isLoading = ref(false);
     const showToast = ref(false);
     const toastType = ref("success");
     const toastMessage = ref("");
 
-    const resetPassword = async () => {
+    const forgetPassword = async () => {
         isLoading.value = true;
         try {
-            const html = await render(Email,{
-                body: "We received a request to reset your password for your Better Auth account. If you didn't make this request, you can safely ignore this email.",
-                link: config.public.NODE_ENV === "development" ? "http://localhost:3000/auth/reset-password" : "https://betterauth.vercel.app/auth/reset-password",
-                receiver: email.value
-            },{
-                pretty: true,
-            });
-
-            await client.forgetPassword({
+            const data = await client.forgetPassword({
                 email: email.value,
-                redirectTo: "/reset-password"
+                redirectTo: "/auth/reset-password"
             });
-
-            const { data: emailRes, error } = await useFetch('/api/verification/send-email', {
-                method: 'POST',
-                body: {
-                    source: "",
-                    head: {
-                        to: email.value,
-                        subject: "Reset password",
-                    },
-                    body: html
-                }
-            });
-
-            if (error.value) {
-                throw new Error(error.value ? error.value.message : "Failed to send email");
+    
+            if(data.error) {
+                console.log(data.error);
+                throw new Error(data.error ? data.error.message : "Failed to send email");
             }
 
             showToast.value = true;
@@ -52,13 +31,13 @@
                 emailSent.value = true;
                 showToast.value = false;
             }, 2000);
-        } catch (error: any) {
+        } catch(error: any) {
             showToast.value = true;
             toastType.value = "error";
             toastMessage.value = error.message;
         }
         isLoading.value = false;
-    };
+    }
 </script>
 
 <template>
@@ -79,12 +58,12 @@
                         <label for="email" class="text-sm dark:text-white mb-2">Email</label>
                     </template>
                 </Textfield>
-                <NuxtLink to="/auth/forget-password" v-if="emailSent" class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="emailSent = false">
+                <NuxtLink to="/auth/forgot-password" v-if="emailSent" class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm border border-gray-300 hover:border-gray-900 dark:border-primary-700 dark:hover:border-primary-900 dark:text-white" @click="emailSent = false">
                         <Icon name="lucide:arrow-left" />
                         Back to reset password
                 </NuxtLink>
                 <button v-else class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
-                    :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="() => resetPassword()"
+                    :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="() => forgetPassword()"
                 >
                     Send reset link
                     <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
