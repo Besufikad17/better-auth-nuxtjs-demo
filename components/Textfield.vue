@@ -117,7 +117,7 @@
           :name="props.name" step="any" :id="id" :class="[
             errorMessage
               ? 'border-red-500 hover:border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-2 py-2.5 border-gray-300 group-hover:border-primary focus:border-none focus:ring-primary-500 ',
+              : 'border py-2.5 border-gray-500 group-hover:border-primary focus:border-none focus:ring-primary-500 ',
             props.iconLeadingClass ? props.iconLeadingClass : '',
             props.leadingIcon ? 'pl-10' : '',
             props.trailingIcon ? 'pr-0' : '',

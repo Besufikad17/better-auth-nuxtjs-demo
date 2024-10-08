@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
     "@libsql/client": "^0.14.0",
     "@libsql/kysely-libsql": "^0.4.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
@@ -23,6 +24,7 @@
     "handlebars": "^4.7.8",
     "nodemailer": "^6.9.15",
     "nuxt": "^3.13.2",
+    "nuxt-headlessui": "^1.2.0",
     "nuxt-icon": "^1.0.0-beta.7",
     "nuxt-mail": "^5.1.1",
     "pg-pool": "^3.7.0",
