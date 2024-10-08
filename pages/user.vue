@@ -30,7 +30,7 @@
 </script>
 
 <template>
-    <div class="flex flex-col items-center gap-6 p-8 px-4 md:h-[calc(100vh-62px)] w-full bg-white dark:bg-black">
+    <div class="flex flex-col items-center gap-6 p-8 px-4 min-h-[calc(100vh-62px)] w-full bg-white dark:bg-black">
         <div class="flex flex-col gap-4 p-4 border border-gray-300 dark:border-primary-700 rounded-md w-full lg:w-2/3">
             <h1 class="dark:text-primary-300 font-semibold">User</h1>
             <div class="flex items-center justify-between">

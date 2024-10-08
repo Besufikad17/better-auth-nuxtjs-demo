@@ -41,7 +41,7 @@
 </script>
 
 <template>
-    <div class="flex items-center justify-center md:h-[calc(100vh-62px)] dark:bg-black bg-white overflow-auto">
+    <div class="flex items-center justify-center min-h-[calc(100vh-62px)] dark:bg-black bg-white overflow-auto">
         <Toast v-if="showToast" :type="toastType" :message="toastMessage" @close="showToast = false" class="fixed top-6 right-6" />
         <div class="flex flex-col p-8">
             <div class="flex flex-col gap-4 p-4 border bg-white dark:bg-black border-gray-300 dark:border-primary-700">

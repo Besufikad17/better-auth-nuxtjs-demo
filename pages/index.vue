@@ -12,7 +12,7 @@
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center gap-6 px-4 md:h-[calc(100vh-62px)] w-full dark:bg-black bg-white 
+    <div class="flex flex-col items-center justify-center gap-6 px-4 min-h-[calc(100vh-62px)] w-full dark:bg-black bg-white 
       bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] overflow-hidden
       dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]">
         <h1 class="dark:text-gray-200 text-4xl font-semibold">Better Auth.</h1>
