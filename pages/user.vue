@@ -13,7 +13,6 @@
 
     client.user.listSessions().then(data => {
         data.data?.map((s: Session) => {
-            console.log(s);
             sessions.value  .push(s);
         });
     }).catch(err => {

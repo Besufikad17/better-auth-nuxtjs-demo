@@ -5,7 +5,7 @@
     const emit = defineEmits(['error', 'success']);
 
     const fullName = ref("");
-    const image = ref();
+    const image = ref("");
     const isLoading = ref(false);
 
     const onFileUpload = async(e: Event) => {
@@ -13,6 +13,7 @@
         const formData = new FormData();
         formData.append('file', element!.files![0]);
         formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET);
+        isLoading.value = true;
         fetch(config.public.CLOUDINARY_URL, {
             method: 'POST',
             body: formData,
@@ -23,18 +24,18 @@
                 image.value = data.secure_url;
             }
         }).catch(err => emit('error', err));
+        isLoading.value = false;
     }
 
     const editProfile = async() => {
-        console.log(fullName.value, image.value);
-        if(fullName.value === "" || image.value) {
+        if(fullName.value === "" || image.value === "") {
             emit('error', { message: 'Please fill all fields!!' });
             return;
         }
         isLoading.value = true;
         const { data, error } = await client.user.update({
-            image: "https://example.com/image.jpg",
-            name: "John Doe",
+            image: image.value,
+            name: fullName.value,
         });
         if(error) {
             emit('error', error);
