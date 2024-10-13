@@ -10,12 +10,14 @@
     const passwordModal = ref(false);
     const profileModal = ref(false);
     const twoFactorAuthenicationModal = ref(false);
+    const twoFactorQRModal = ref(false);
     const twoFactorAuthenicationAction = ref("enable");
     const emailVerificationSent = ref(false);
     const sessions = ref<Session[]>([]);
     const showToast = ref(false);
     const toastType = ref("message");
     const toastMessage = ref("");
+    const qrValue = ref("");
 
     client.user.listSessions().then(data => {
         data.data?.map((s: Session) => {
@@ -24,6 +26,11 @@
     }).catch(err => {
         console.log(err);
     });
+
+    const { data, error } = await client.twoFactor.getTotpUri()
+    if (data) {
+        qrValue.value = data.totpURI;
+    }
 
     const logout = async () => {
         await client.signOut();
@@ -126,6 +133,14 @@
                 />
             </template>
         </Modal>
+        <Modal v-model="twoFactorQRModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
+            <template #Heading>
+                <h1 class="dark:text-primary-300 font-semibold">Scan QR Code</h1>
+            </template>
+            <template #content>
+                <TwoFactorQR :value="qrValue"/>
+            </template>
+        </Modal>
         <Toast v-if="showToast" :type="toastType" :message="toastMessage" @close="showToast = false" class="fixed top-6 right-6" />
         <div class="flex flex-col gap-4 p-4 border bg-white dark:bg-black border-gray-300 dark:border-primary-700 rounded-lg shadow-md w-full lg:w-2/3">
             <h1 class="dark:text-primary-300 font-semibold">User</h1>
@@ -187,7 +202,7 @@
                     </div>
                     <div v-if="session.data?.user.twoFactorEnabled" class="flex items-center gap-2">
                         <button class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
-                          dark:text-primary-300 rounded-md" @click="">
+                          dark:text-primary-300 rounded-md" @click="twoFactorQRModal = true">
                             <Icon name="lucide:qr-code" />
                             Scan QR Code
                         </button>
