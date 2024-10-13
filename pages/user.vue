@@ -5,6 +5,8 @@
     const session = client.useSession();
 
     const isLoading = ref(false);
+    const passkeyModal = ref(false);
+    const passkeyListModal = ref(false);
     const passwordModal = ref(false);
     const profileModal = ref(false);
     const sessions = ref<Session[]>([]);
@@ -34,6 +36,7 @@
 
     const showNotification = (message: string, type: string) => {
         profileModal.value = false;
+        passkeyModal.value = false;
         passwordModal.value = false;
         showToast.value = true;
         toastType.value = type;
@@ -46,6 +49,28 @@
 
 <template>
     <div class="flex flex-col items-center gap-6 p-8 px-4 min-h-[calc(100vh-62px)] w-full bg-white dark:bg-black  bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]">
+        <Modal v-model="passkeyModal" wrapper-class="max-w-lg bg-white dark:bg-black">
+            <template #Heading>
+                <h1 class="dark:text-primary-300 font-semibold">Add New Passkey</h1>
+            </template>
+            <template #content>
+                <PasskeyForm 
+                    @error="(err) => showNotification(err.message, 'error')" 
+                    @success="(msg) => showNotification(msg.message, 'message')"
+                />
+            </template>
+        </Modal>
+        <Modal v-model="passkeyListModal" wrapper-class="max-w-lg bg-white dark:bg-black">
+            <template #Heading>
+                <h1 class="dark:text-primary-300 font-semibold">Passkeys</h1>
+            </template>
+            <template #content>
+                <PasskeyList
+                    @error="(err) => showNotification(err.message, 'error')" 
+                    @success="(msg) => showNotification(msg.message, 'message')"
+                />
+            </template>
+        </Modal>
         <Modal v-model="passwordModal" wrapper-class="max-w-lg bg-white dark:bg-black">
             <template #Heading>
                 <h1 class="dark:text-primary-300 font-semibold">Change Password</h1>
@@ -106,12 +131,12 @@
                 <div class="flex flex-col gap-2 sm:flex-row sm:gap-0 sm:items-center sm:justify-between">
                     <div class="flex items-center gap-2">
                         <button class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
-                          dark:text-primary-300 rounded-md">
+                          dark:text-primary-300 rounded-md" @click="passkeyModal = true">
                             <Icon name="lucide:plus" />
                             Add New Passkey
                         </button>
                         <button class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
-                         dark:text-primary-300 rounded-md">
+                         dark:text-primary-300 rounded-md" @click="passkeyListModal = true">
                             <Icon name="lucide:fingerprint" />
                             Passkeys
                         </button>
