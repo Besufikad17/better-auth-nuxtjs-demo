@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { passkey } from "better-auth/plugins";
+import { passkey, twoFactor } from "better-auth/plugins";
 import Pool from "pg-pool";
 import { sendResetEmail, sendVerification } from "./email";
 
@@ -19,6 +19,9 @@ export const auth = betterAuth({
     },
     plugins: [
         passkey(),
+        twoFactor({
+            issuer: "My App",
+        })
     ],
     socialProviders: {
         discord: {

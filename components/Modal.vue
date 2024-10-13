@@ -77,7 +77,7 @@ const open = computed({
                 class="relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full"
               >
                 <div
-                  class="absolute w-full items-center justify-between right-0 top-0 hidden px-4 pt-4 sm:flex"
+                  class="absolute w-full items-center justify-between right-0 top-0 px-4 pt-4 flex"
                 >
                   <HeadlessDialogTitle
                     as="h3"

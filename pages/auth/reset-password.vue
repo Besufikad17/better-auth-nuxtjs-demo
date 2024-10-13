@@ -30,10 +30,10 @@
             setTimeout(async() => {
                 await navigateTo("/auth/sign-in");
             }, 2000);
-        } catch (error: any) {
+        } catch (error) {
             showToast.value = true;
             toastType.value = "error";
-            toastMessage.value = error.message;
+            toastMessage.value = (error as Error).message;
         }
         isLoading.value = false;
     };

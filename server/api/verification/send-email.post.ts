@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
         }
         await sendEmail({ head: emailHeading, body: emailBody });
         return 200;
-    } catch (error: unknown) {
+    } catch (error) {
         console.log(error);
         return createError({ statusCode: 500, statusMessage: 'Something went wrong.' });
     }

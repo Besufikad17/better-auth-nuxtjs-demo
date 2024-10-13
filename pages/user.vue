@@ -9,6 +9,8 @@
     const passkeyListModal = ref(false);
     const passwordModal = ref(false);
     const profileModal = ref(false);
+    const twoFactorAuthenicationModal = ref(false);
+    const twoFactorAuthenicationAction = ref("enable");
     const emailVerificationSent = ref(false);
     const sessions = ref<Session[]>([]);
     const showToast = ref(false);
@@ -38,7 +40,9 @@
     const showNotification = (message: string, type: string) => {
         profileModal.value = false;
         passkeyModal.value = false;
+        passkeyListModal.value = false;
         passwordModal.value = false;
+        twoFactorAuthenicationModal.value = false;
         showToast.value = true;
         toastType.value = type;
         toastMessage.value = message;
@@ -66,18 +70,18 @@
 
 <template>
     <div class="flex flex-col items-center gap-6 p-8 px-4 min-h-[calc(100vh-62px)] w-full bg-white dark:bg-black  bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]">
-        <Modal v-model="passkeyModal" wrapper-class="max-w-lg bg-white dark:bg-black">
+        <Modal v-model="passkeyModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
             <template #Heading>
                 <h1 class="dark:text-primary-300 font-semibold">Add New Passkey</h1>
             </template>
             <template #content>
                 <PasskeyForm 
-                    @error="(err) => showNotification(err.message, 'error')" 
-                    @success="(msg) => showNotification(msg.message, 'message')"
+                    @error="(err: Error) => showNotification(err.message, 'error')" 
+                    @success="(msg: any) => showNotification(msg, 'message')"
                 />
             </template>
         </Modal>
-        <Modal v-model="passkeyListModal" wrapper-class="max-w-lg bg-white dark:bg-black">
+        <Modal v-model="passkeyListModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
             <template #Heading>
                 <h1 class="dark:text-primary-300 font-semibold">Passkeys</h1>
             </template>
@@ -88,7 +92,7 @@
                 />
             </template>
         </Modal>
-        <Modal v-model="passwordModal" wrapper-class="max-w-lg bg-white dark:bg-black">
+        <Modal v-model="passwordModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
             <template #Heading>
                 <h1 class="dark:text-primary-300 font-semibold">Change Password</h1>
             </template>
@@ -99,12 +103,24 @@
                 />
             </template>
         </Modal>
-        <Modal v-model="profileModal" wrapper-class="max-w-lg bg-white dark:bg-black">
+        <Modal v-model="profileModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
             <template #Heading>
                 <h1 class="dark:text-primary-300 font-semibold">Edit Profile</h1>
             </template>
             <template #content>
                 <ProfileForm 
+                    @error="(err) => showNotification(err.message, 'error')" 
+                    @success="(msg) => showNotification(msg.message, 'message')"
+                />
+            </template>
+        </Modal>
+        <Modal v-model="twoFactorAuthenicationModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
+            <template #Heading>
+                <h1 class="dark:text-primary-300 font-semibold">Enable 2FA</h1>
+            </template>
+            <template #content>
+                <TwoFactorAuthentication 
+                    :action="twoFactorAuthenicationAction"
                     @error="(err) => showNotification(err.message, 'error')" 
                     @success="(msg) => showNotification(msg.message, 'message')"
                 />
@@ -169,8 +185,25 @@
                             Passkeys
                         </button>
                     </div>
-                    <button class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
-                        dark:text-primary-300 rounded-md">
+                    <div v-if="session.data?.user.twoFactorEnabled" class="flex items-center gap-2">
+                        <button class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
+                          dark:text-primary-300 rounded-md" @click="">
+                            <Icon name="lucide:qr-code" />
+                            Scan QR Code
+                        </button>
+                        <button class="bg-red-500 text-white flex items-center justify-center gap-2 px-2 py-1 rounded-md" @click="() => {
+                            twoFactorAuthenicationModal = true;
+                            twoFactorAuthenicationAction = 'disable';
+                        }">
+                            <Icon name="lucide:shield-off" />
+                            Disable 2FA
+                        </button>
+                    </div>  
+                    <button v-else class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
+                        dark:text-primary-300 rounded-md" @click="() => {
+                            twoFactorAuthenicationModal = true;
+                            twoFactorAuthenicationAction = 'enable';
+                        }">
                         <Icon name="lucide:shield-check" />
                         Enable 2FA
                     </button>

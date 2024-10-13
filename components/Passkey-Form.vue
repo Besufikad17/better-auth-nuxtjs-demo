@@ -18,8 +18,8 @@
                     throw new Error(res.error.message);
                 }
                 emit('success', { message: "Passkey created successfully." });
-            } catch (error: any) {
-                emit('error', { message: error.message });
+            } catch (error) {
+                emit('error', { message: (error as Error).message });
             }
         }
         isLoading.value = false;
