@@ -9,6 +9,7 @@
     const passkeyListModal = ref(false);
     const passwordModal = ref(false);
     const profileModal = ref(false);
+    const emailVerificationSent = ref(false);
     const sessions = ref<Session[]>([]);
     const showToast = ref(false);
     const toastType = ref("message");
@@ -44,6 +45,22 @@
         setTimeout(() => {
             showToast.value = false;
         }, 3000);
+    }
+
+    const verifyEmail = async () => {
+        isLoading.value = true;
+        const data = await client.sendVerificationEmail({
+            email: session.value.data?.user.email || "",
+            callbackURL: "/auth/email-verification"
+        });
+
+        if (data.error) {
+            showNotification(data.error.message || "", "error");
+        } else {
+            showNotification("Email verification sent!!", "message");
+            emailVerificationSent.value = true;
+        }
+        isLoading.value = false;
     }
 </script>
 
@@ -112,7 +129,7 @@
                     Edit Profile
                 </button>
             </div>
-            <div class="flex flex-col gap-2 px-2 mt-4 border-l border-gray-300 dark:border-primary-700">
+            <div v-if="session.data?.user.emailVerified" class="flex flex-col gap-2 px-2 mt-4 border-l border-gray-300 dark:border-primary-700">
                 <h1 class="text-xs dark:text-primary-300">Active Sessions</h1>
                 <div v-for="(s, index) in sessions" :key="index" class="flex items-center gap-2 text-gray-900 dark:text-gray-300">
                     <Icon name="lucide:laptop" />
@@ -122,6 +139,17 @@
                         <span v-else class="text-red-500 hover:underline">sign out</span>
                     </button>
                 </div>
+            </div>
+            <div v-else class="flex flex-col gap-2 p-3 py-4 border border-gray-500 dark:border-primary-700 rounded-md">
+                <h1 class="dark:text-primary-300 font-semibold">Verify Your Email Address</h1>
+                <p class="dark:text-primary-300">Please verify your email address. Check your inbox for the verification email. If you haven't received the email, click the button below to resend.</p>
+                <div class="flex items-center justify-start">
+                    <button class="bg-gray-100 dark:bg-primary-700 flex items-center justify-center gap-2 px-2 py-1
+                    dark:text-primary-300 rounded-md" @click="verifyEmail" :disabled="isLoading">
+                        {{ emailVerificationSent ? 'Resent verification email' : 'Send verification email' }}
+                        <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
+                    </button>
+                </div>    
             </div>
             <div class="flex flex-col gap-2 py-4 border-t border-b border-gray-500 dark:border-primary-700">
                 <div class="flex items-center justify-between">

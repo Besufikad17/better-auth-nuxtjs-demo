@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { passkey } from "better-auth/plugins";
 import Pool from "pg-pool";
-import { sendResetEmail } from "./email";
+import { sendResetEmail, sendVerification } from "./email";
 
 export const auth = betterAuth({
     database: new Pool({
@@ -11,6 +11,10 @@ export const auth = betterAuth({
         enabled: true,
         async sendResetPassword(url, user) { 
             await sendResetEmail(user.email, url)
+        },
+        sendEmailVerificationOnSignUp: true,
+        async sendVerificationEmail(email, url) {
+            await sendVerification(email, url);
         }
     },
     plugins: [
