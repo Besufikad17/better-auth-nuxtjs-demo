@@ -1,3 +1,11 @@
+export function getBrowser(str?: string) {
+    return str?.split(" ")[8].split("/")[0];
+}
+
+export function getDevice(str?: string) {
+    return str?.split(' ')[2];
+}
+
 export function getToastStyleByType(type: string) {
     switch(type) {
         case "message":

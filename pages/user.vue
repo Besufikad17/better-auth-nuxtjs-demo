@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { client } from "~/composables/functions/client"; 
     import type { Session } from "~/types/auth";
+    import { getBrowser, getDevice } from "~/composables/functions/strings";
 
     const session = client.useSession();
 
@@ -27,10 +28,12 @@
         console.log(err);
     });
 
-    const { data, error } = await client.twoFactor.getTotpUri()
-    if (data) {
-        qrValue.value = data.totpURI;
-    }
+    onMounted(async() => {
+        const { data, error } = await client.twoFactor.getTotpUri();
+        if (data) {
+            qrValue.value = data.totpURI;
+        }
+    })
 
     const logout = async () => {
         await client.signOut();
@@ -163,8 +166,9 @@
             <div v-if="session.data?.user.emailVerified" class="flex flex-col gap-2 px-2 mt-4 border-l border-gray-300 dark:border-primary-700">
                 <h1 class="text-xs dark:text-primary-300">Active Sessions</h1>
                 <div v-for="(s, index) in sessions" :key="index" class="flex items-center gap-2 text-gray-900 dark:text-gray-300">
-                    <Icon name="lucide:laptop" />
-                    <span>{{ s.userAgent?.split(" ")[2] }}, {{  s.userAgent?.split(" ")[8].split("/")[0] }}</span>
+                    <Icon v-if="getDevice(s.userAgent) === 'Linux' || getDevice(s.userAgent) === 'Windows' || getDevice(s.userAgent) === 'Mac'" name="lucide:laptop" />
+                    <Icon v-else name="lucide:smartphone" />
+                    <span>{{ getDevice(s.userAgent) }}, {{ getBrowser(s.userAgent) }}</span>
                     <button class="bg-transparent px-2 py-1 flex items-center justify-center" @click="() => revokeSession(s.id)">
                         <Icon v-if="isLoading" name="lucide:trash" />
                         <span v-else class="text-red-500 hover:underline">sign out</span>

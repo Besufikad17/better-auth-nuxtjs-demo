@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { passkey, twoFactor } from "better-auth/plugins";
 import Pool from "pg-pool";
-import { sendResetEmail, sendVerification } from "./email";
+import { sendOTP, sendResetEmail, sendVerification } from "./email";
 
 export const auth = betterAuth({
     database: new Pool({
@@ -21,6 +21,11 @@ export const auth = betterAuth({
         passkey(),
         twoFactor({
             issuer: "My App",
+            otpOptions: {
+				async sendOTP(user, otp) {
+                   await sendOTP(user.email, otp);
+				},
+			},
         })
     ],
     socialProviders: {

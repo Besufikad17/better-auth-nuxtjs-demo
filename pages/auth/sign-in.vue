@@ -25,7 +25,16 @@
         const { data, error } = await client.signIn.email({
             email: email.value,
             password: password.value,
-            callbackURL: "/user"
+            callbackURL: "/user",
+        }, {
+            async onSuccess(context) {
+                if (context.data.twoFactorRedirect) {
+                    const { data, error } = await client.twoFactor.sendOtp();
+                    if (data) {
+                        await navigateTo("/auth/two-factor");
+                    }
+                }
+            }
         });
 
         isLoading.value = false;

@@ -13,6 +13,8 @@
     const isDark = colorMode.value === "dark";
     const src = ref(props.value);
     const { text, copy, copied, isSupported } = useClipboard({ source: src });
+
+    console.log(props.value);
 </script>
 
 <template>
@@ -23,7 +25,7 @@
                 type: 'dots',
                 color: isDark ? '#ffffff' : '#000000',
                 background: 'transparent',
-                size: 10,
+                size: 5,
                 margin: 3,
                 scale: 4
             }" :backgroundOptions="{ color: 'transparent' }" />
