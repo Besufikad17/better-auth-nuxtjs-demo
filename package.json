@@ -13,14 +13,14 @@
     "@headlessui/vue": "^1.7.23",
     "@libsql/client": "^0.14.0",
     "@libsql/kysely-libsql": "^0.4.1",
-    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@nuxtjs/tailwindcss": "^6.12.2",
     "@types/nodemailer": "^6.4.16",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue-email/components": "^0.0.19",
     "@vue-email/render": "^0.0.9",
     "@vue-email/tailwind": "^0.1.9",
     "@vueuse/core": "^11.1.0",
-    "better-auth": "^0.2.8-beta.12",
+    "better-auth": "^0.5.2-beta.19",
     "handlebars": "^4.7.8",
     "nodemailer": "^6.9.15",
     "nuxt": "^3.13.2",
@@ -31,8 +31,8 @@
     "pg-pool": "^3.7.0",
     "qrcode-vue3": "^1.7.1",
     "ua-parser-js": "^1.0.39",
-    "vue": "latest",
-    "vue-router": "latest"
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "devDependencies": {

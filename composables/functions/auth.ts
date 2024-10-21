@@ -1,6 +1,6 @@
-import { betterAuth } from "better-auth";
-import { passkey, twoFactor } from "better-auth/plugins";
 import Pool from "pg-pool";
+import { betterAuth } from "better-auth";
+import {  multiSession, organization, passkey, twoFactor } from "better-auth/plugins";
 import { sendOTP, sendResetEmail, sendVerification } from "./email";
 
 export const auth = betterAuth({
@@ -9,15 +9,17 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {  
         enabled: true,
-        async sendResetPassword(url, user) { 
-            await sendResetEmail(user.email, url)
+        async sendResetPassword(user, url) { 
+            await sendResetEmail(user.email, url);
         },
         sendEmailVerificationOnSignUp: true,
-        async sendVerificationEmail(email, url) {
+        async sendVerificationEmail(url: string, email: string) {
             await sendVerification(email, url);
         }
     },
     plugins: [
+        multiSession(),
+        organization(),
         passkey(),
         twoFactor({
             issuer: "My App",

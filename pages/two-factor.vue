@@ -45,7 +45,7 @@
     <div class="flex items-center justify-center min-h-[calc(100vh-62px)] dark:bg-black bg-white overflow-auto w-full">
         <Toast v-if="showToast" :type="toastType" :message="toastMessage" @close="showToast = false" class="fixed top-6 right-6" />
         <div class="flex flex-col items-center p-8 w-full">
-            <div class="flex flex-col gap-4 p-4 border bg-white dark:bg-black border-gray-300 dark:border-primary-700 w-1/2 md:w-1/3">
+            <div class="flex flex-col gap-4 p-4 border bg-white dark:bg-black border-gray-300 dark:border-primary-700 w-1/2 lg:w-1/3">
                 <h1 class="dark:text-white font-semibold">Confirm OTP</h1>
                 <p class="text-sm text-gray-500 dark:text-primary-400">Enter the OTP we just sent you</p>
                 <OTPField v-model="otp" class="p-2 focus:border-2 focus:border-gray-950 dark:bg-[#424242] dark:text-white" :fields="6" />
