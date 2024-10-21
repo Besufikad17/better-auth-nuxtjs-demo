@@ -5,6 +5,7 @@
     const emit = defineEmits(['error', 'success']);
 
     const fullName = ref("");
+    const imageUploading = ref(false);
     const image = ref("");
     const isLoading = ref(false);
 
@@ -13,7 +14,7 @@
         const formData = new FormData();
         formData.append('file', element!.files![0]);
         formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET);
-        isLoading.value = true;
+        imageUploading.value = true;
         fetch(config.public.CLOUDINARY_URL, {
             method: 'POST',
             body: formData,
@@ -24,7 +25,7 @@
                 image.value = data.secure_url;
             }
         }).catch(err => emit('error', err));
-        isLoading.value = false;
+        imageUploading.value = false;
     }
 
     const editProfile = async() => {
@@ -58,7 +59,11 @@
         </Textfield>
         <div class="flex flex-col gap-2">
             <label for="image" class="text-sm dark:text-white mb-2">Profile Image</label>
-            <input name="image" type="file" v-on:change="onFileUpload" class="px-2 py-1 w-full text-gray-500 dark:text-primary-700 border border-gray-500 dark:border-primary-700 shadow-sm rounded-sm" />
+            <div class="flex items-center gap-2">
+                <img v-if="image !== ''" :src="image" class="size-12 rounded-full" />
+                <Icon v-if="imageUploading" name="svg-spinners:180-ring-with-bg" />
+                <input name="image" type="file" v-on:change="onFileUpload" class="px-2 py-1 w-full text-gray-500 dark:text-primary-700 border border-gray-500 dark:border-primary-700 shadow-sm rounded-sm" />
+            </div>
         </div>
         <div class="flex items-center justify-end">
             <button class="flex items-center justify-center gap-2 p-2 text-sm rounded-sm text-white dark:text-black"

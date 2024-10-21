@@ -4,6 +4,7 @@
     import type { AuthProvider } from "~/types/auth";
 
     const authType = ref("sign-in");
+    const imageUploading = ref(false);
     const isLoading = ref(false);
     const showToast = ref(false);
     const toastType = ref("message");
@@ -77,6 +78,8 @@
         const formData = new FormData();
         formData.append('file', element!.files![0]);
         formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET);
+        
+        imageUploading.value = true;
         fetch(config.public.CLOUDINARY_URL, {
             method: 'POST',
             body: formData,
@@ -87,6 +90,7 @@
                 image.value = data.secure_url;
             }
         }).catch(err => console.error(err));
+        imageUploading.value = false;
     }
 
     const signup = async() => {
@@ -231,7 +235,11 @@
                     </Textfield>
                     <div class="flex flex-col gap-2">
                         <label for="image" class="text-sm dark:text-white mb-2">Profile Image (Optional)</label>
-                        <input name="image" type="file" v-on:change="onFileUpload" class="px-2 py-1 w-full text-gray-300 dark:text-primary-700 border border-gray-300 dark:border-primary-700 shadow-sm rounded-sm" />
+                        <div class="flex items-center gap-2">
+                            <img v-if="image !== ''" :src="image" class="size-12 rounded-full" />
+                            <Icon v-if="imageUploading" name="svg-spinners:180-ring-with-bg" />
+                            <input name="image" type="file" v-on:change="onFileUpload" class="px-2 py-1 w-full text-gray-300 dark:text-primary-700 border border-gray-300 dark:border-primary-700 shadow-sm rounded-sm" />
+                        </div>
                     </div>
                     <button class="flex items-center justify-center w-full gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
                         :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="signup"
