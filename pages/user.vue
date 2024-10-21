@@ -1,7 +1,7 @@
 <script setup lang="ts">
+    import { UAParser } from "ua-parser-js";
     import { client } from "~/composables/functions/client"; 
     import type { Session } from "~/types/auth";
-    import { getBrowser, getDevice } from "~/composables/functions/strings";
 
     const session = client.useSession();
 
@@ -20,11 +20,11 @@
     const toastMessage = ref("");
     const qrValue = ref("");
 
-    client.user.listSessions().then(data => {
+    client.user.listSessions().then((data: any) => {
         data.data?.map((s: Session) => {
             sessions.value.push(s);
         });
-    }).catch(err => {
+    }).catch((err: Error) => {
         console.log(err);
     });
 
@@ -44,6 +44,9 @@
         isLoading.value = true;
         await client.user.revokeSession({ id });
         sessions.value = sessions.value.filter((s: Session) => s.id !== id);
+        if(id === session.value.data?.session.id) {
+            await logout();
+        }
         isLoading.value = false;
     };
 
@@ -166,12 +169,12 @@
             <div v-if="session.data?.user.emailVerified" class="flex flex-col gap-2 px-2 mt-4 border-l border-gray-300 dark:border-primary-700">
                 <h1 class="text-xs dark:text-primary-300">Active Sessions</h1>
                 <div v-for="(s, index) in sessions" :key="index" class="flex items-center gap-2 text-gray-900 dark:text-gray-300">
-                    <Icon v-if="getDevice(s.userAgent) === 'Linux' || getDevice(s.userAgent) === 'Windows' || getDevice(s.userAgent) === 'Mac'" name="lucide:laptop" />
-                    <Icon v-else name="lucide:smartphone" />
-                    <span>{{ getDevice(s.userAgent) }}, {{ getBrowser(s.userAgent) }}</span>
+                    <Icon v-if="new UAParser(s.userAgent).getDevice().type === 'mobile'" name="lucide:smartphone" />
+                    <Icon v-else name="lucide:laptop" />
+                    <span>{{ new UAParser(s.userAgent).getOS().name }}, {{ new UAParser(s.userAgent).getBrowser().name }}</span>
                     <button class="bg-transparent px-2 py-1 flex items-center justify-center" @click="() => revokeSession(s.id)">
-                        <Icon v-if="isLoading" name="lucide:trash" />
-                        <span v-else class="text-red-500 hover:underline">sign out</span>
+                        <Icon v-if="isLoading" name="svg-spinners:180-ring-with-bg" />
+                        <span v-else class="text-red-500 hover:underline">{{ s.id === session.data.session.id ? 'Sign Out' : 'Terminate' }}</span>
                     </button>
                 </div>
             </div>
