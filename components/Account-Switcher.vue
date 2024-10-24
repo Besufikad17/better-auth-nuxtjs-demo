@@ -3,20 +3,20 @@
     import type { DeviceSession } from "~/types/auth";
 
     const session = client.useSession();
-    const sessions = ref<any[]>([]);
 
-    onMounted(async() => {
-       const { data, error } = await client.multiSession.listDeviceSessions();
-
-       if(data) {
-            console.log(typeof data);
-            sessions.value = data;
-       }
-
-       if(error) {
-            console.log(error);
-       }
+    const props = defineProps({
+        sessions: {
+            type: Array<DeviceSession>
+        }
     });
+
+    console.log(props.sessions);
+
+    const switchAccount = async(id: string) => {
+        await client.multiSession.setActive({
+            sessionId: id
+        });
+    }
 </script>
 
 <template>
@@ -55,9 +55,12 @@
                                 <HeadlessMenuItem>
                                     <div class="flex flex-col items-start px-2 py-1 gap-2 justify-start border-b border-t border-gray-300">
                                         <span>Switch Account</span>
-                                        <div v-for="(s, index) in sessions" :key="index" class="bg-gray-200 dark:bg-primary-700 dark:text-gray-300 px-2 py-1 flex items-center gap-2">
-                                            
-                                        </div>
+                                        <span v-for="(s, index) in sessions" :key="index">
+                                            <span v-if="session.data?.session.id !== s.session.id" class="bg-gray-200 dark:bg-primary-700 dark:text-gray-300 px-2 py-1 flex items-center gap-2" @click="(_) => switchAccount(s.session.id)">
+                                                <img :src="s.user.image" class="size-4 rounded-full" />
+                                                <span>{{ s.user.name }}</span>
+                                            </span>
+                                        </span>
                                     </div>
                                 </HeadlessMenuItem>
                                 <HeadlessMenuItem>

@@ -1,12 +1,17 @@
 <script setup lang="ts">
     import { ref, onMounted } from "vue";
+    import { useClipboard } from "@vueuse/core";
     import { UAParser } from "ua-parser-js";
     import { client } from "~/composables/functions/client"; 
-    import type { Session } from "~/types/auth";
+    import type { DeviceSession, Session } from "~/types/auth";
 
+    const activeOrganization = ref(client.useActiveOrganization());
+    const orgList = ref(client.useListOrganizations());
     const session = client.useSession();
+    const deviceSessions = ref<DeviceSession[]>([]);
 
     const isLoading = ref(false);
+    const invitationModal = ref(false);
     const organizationModal = ref(false);
     const passkeyModal = ref(false);
     const passkeyListModal = ref(false);
@@ -21,10 +26,21 @@
     const toastType = ref("message");
     const toastMessage = ref("");
     const qrValue = ref("");
+    const org = ref("Personal");
+    const selectedOrg = ref();
 
     client.user.listSessions().then((data: any) => {
         data.data?.map((s: Session) => {
             sessions.value.push(s);
+        });
+    }).catch((err: Error) => {
+        console.log(err);
+    });
+
+    // FIXME can't fetch other sessions
+    client.multiSession.listDeviceSessions().then((data: any) => {
+        data.data?.map((s: DeviceSession) => {
+            deviceSessions.value.push(s);
         });
     }).catch((err: Error) => {
         console.log(err);
@@ -35,12 +51,15 @@
         if (data) {
             qrValue.value = data.totpURI;
         }
-    })
+    });
 
     const logout = async () => {
         await client.signOut();
         await navigateTo("/auth/sign-in");
     };
+
+    const src = ref();
+    const { text, copy, copied, isSupported } = useClipboard({ source: src });
 
     const revokeSession = async (id: string) => {
         isLoading.value = true;
@@ -53,6 +72,7 @@
     };
 
     const showNotification = (message: string, type: string) => {
+        invitationModal.value = false;
         organizationModal.value = false;
         profileModal.value = false;
         passkeyModal.value = false;
@@ -82,12 +102,30 @@
         }
         isLoading.value = false;
     }
+
+    watch(org, (newOrg) => {
+        if(orgList.value.data) {
+            selectedOrg.value = orgList.value.data?.find((o: any) => o.name === newOrg);
+            client.organization.setActive(selectedOrg.value?.id);
+        }
+    });
 </script>
 
 <template>
     <div class="flex items-center justify-center p-8 px-4 min-h-[calc(100vh-62px)] w-full bg-white dark:bg-black  bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] dark:bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)]">
         <div class="flex flex-col gap-6 w-full lg:w-2/3">
-            <AccountSwitcher />
+            <AccountSwitcher :sessions="deviceSessions" />
+            <Modal v-model="invitationModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
+                <template #Heading>
+                    <h1 class="dark:text-primary-300 font-semibold">Invite Member</h1>
+                </template>
+                <template #content>
+                    <InvitationForm 
+                        @error="(err: Error) => showNotification(err.message, 'error')" 
+                        @success="(msg: any) => showNotification(msg, 'message')"
+                    />
+                </template>
+            </Modal>
             <Modal v-model="organizationModal" wrapper-class="md:max-w-lg bg-white dark:bg-black">
                 <template #Heading>
                     <h1 class="dark:text-primary-300 font-semibold">Add New Organization</h1>
@@ -223,6 +261,7 @@
                     </div>
                     <div class="flex flex-col gap-2 justify-end">
                         <h1 class="dark:text-primary-300 font-semibold">Two Factor</h1>
+                        <!-- FIXME enable 2FA -->
                         <div v-if="session.data?.user.twoFactorEnabled" class="flex items-center gap-2">
                             <button class="bg-transparent border border-gray-500 dark:border-primary-700 flex items-center justify-center gap-2 px-2 py-1
                               dark:text-primary-300 rounded-md" @click="twoFactorQRModal = true">
@@ -263,12 +302,62 @@
             <div class="flex flex-col gap-4 p-4 border bg-white dark:bg-black border-gray-300 dark:border-primary-700 rounded-lg shadow-md w-full">
                 <h1 class="dark:text-primary-300 font-semibold">Organization</h1>
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                    <div class="flex flex-col gap-2 justify-end"></div>
+                    <div class="flex flex-col gap-2 justify-end">
+                        <select v-model="org" class="text-gray-900 text-sm rounded-lg block w-full px-2.5 py-1 bg-white dark:bg-black focus:outline-none focus:ring-0 dark:text-white cursor-pointer">
+                            <option>Personal</option>
+                            <option v-for="(org, index) in orgList.data" :key="index">{{ org.name }}</option>
+                        </select>                        
+                    </div>
                     <div class="flex flex-col gap-2 justify-end">
                         <button class="flex items-center gap-2 px-2 py-1 bg-primary-800 text-white dark:bg-gray-200 dark:text-black" @click="organizationModal = true">
                             <Icon name="lucide:plus" />
                             New Organization
                         </button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span v-if="org === 'Personal'" class="bg-gray-200 dark:bg-primary-600 dark:text-white flex items-center justify-center size-12">P</span>
+                    <img v-else :src="selectedOrg ? selectedOrg.logo : ''" class="size-12" />
+                    <div class="flex flex-col gap-2 dark:text-primary-300">
+                        <span>{{ selectedOrg ? selectedOrg.name : 'Personal' }}</span>
+                        <span class="text-xs">{{ activeOrganization.data?.members.length }} Memebers</span>
+                    </div>
+                </div>
+                <div class="flex items-start justify-between">
+                    <div class="flex flex-col gap-2">
+                        <h1 class="dark:text-primary-300 font-semibold py-1 border-b border-gray-300 dark:border-gray-200">Members</h1>
+                        <div v-if="activeOrganization && activeOrganization.data" v-for="(member, index) in activeOrganization.data?.members" class="flex items-center gap-3">
+                            <img :src="member.user.image" class="size-12 rounded-full" />
+                            <div class="flex flex-col gap-2 dark:text-primary-300">
+                                <span>{{ member.user.name }}</span>
+                                <span class="text-xs">{{ member.role }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 w-7/12">
+                        <h1 class="dark:text-primary-300 font-semibold py-1 border-b border-gray-300 dark:border-gray-200">Invites</h1>
+                        <span v-if="org === 'Personal'" class="text-xs text-gray-500 dark:text-primary-700">You can't invite members to your personal workspace.</span>
+                        <div v-else class="flex flex-col gap-4">
+                            <div v-for="(invitation, index) in activeOrganization.data?.invitations" :key="index" class="flex items-start justify-between">
+                                <div class="flex flex-col gap-2 dark:text-white">
+                                    <span>{{ invitation.email }}</span>
+                                    <span class="text-xs">{{ invitation.role }}</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <button class="flex items-center justify-center px-2 py-1 bg-red-800 text-white">Revoke</button>
+                                    <button class="flex items-center justify-center bg-transparent focus:outline-none focus:ring-0 text-gray-950 dark:text-gray-300" @click="() => { src = `http://localhost:3000/accept-invitation/${invitation.id}`; copy(src) }"> 
+                                        <Icon v-if="!copied" name="lucide:copy" />
+                                        <Icon v-else name="material-symbols:done" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button class="flex items-center justify-center gap-2 p-2 text-sm rounded-sm bg-gray-300 dark:bg-primary-700 dark:text-white" @click="invitationModal = true">
+                                    <Icon name="lucide:mail" />
+                                    Invite memeber
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

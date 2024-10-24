@@ -12,7 +12,8 @@
     const isLoading = ref(false);
     const password = ref("");
 
-    const enable2FA = async() => {
+    const handle2FA = async() => {
+        console.log(props.action);
         isLoading.value = true;
         if(password.value === "") {
             emit('error', { message: "Password is required." });
@@ -25,6 +26,7 @@
                     res = await client.twoFactor.enable({
                         password: password.value
                     });
+                    console.log(res);
                 }else {
                     res = await client.twoFactor.disable({
                         password: password.value
@@ -34,7 +36,7 @@
                 if(res.error) {
                     throw new Error(res.error.message);
                 }
-                emit('success', { message: "2FA enabled successfully." });
+                emit('success', { message: `2FA ${props.action}d successfully.` });
             } catch(error) {
                 emit('error', { message: (error as Error).message });
             }
@@ -55,9 +57,9 @@
         </Textfield>
         <div class="flex items-center justify-end">
             <button class="flex items-center justify-center gap-2 p-2 text-sm rounded-sm text-white dark:text-black"
-                :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="enable2FA"
+                :class="isLoading ? 'bg-gray-800 dark:bg-gray-300' : 'bg-black dark:bg-white'" :disabled="isLoading" @click="handle2FA"
             >
-                Enable 2FA
+                {{ action === 'enable' ? 'Enable 2FA' : 'Disable 2FA' }}
                 <Icon v-if="isLoading" name="svg-spinners:90-ring-with-bg" />
             </button>
         </div>

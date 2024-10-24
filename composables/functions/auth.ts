@@ -1,7 +1,7 @@
 import Pool from "pg-pool";
 import { betterAuth } from "better-auth";
 import {  multiSession, organization, passkey, twoFactor } from "better-auth/plugins";
-import { sendOTP, sendResetEmail, sendVerification } from "./email";
+import { sendInvitationEmail, sendOTP, sendResetEmail, sendVerification } from "./email";
 
 export const auth = betterAuth({
     database: new Pool({
@@ -19,7 +19,17 @@ export const auth = betterAuth({
     },
     plugins: [
         multiSession(),
-        organization(),
+        organization({
+            async sendInvitationEmail(data) {
+                await sendInvitationEmail({
+                    email: data.email,
+                    invitedByUsername: data.inviter.user.name,
+                    invitedByEmail: data.inviter.user.email,
+                    teamName: data.organization.name,
+                    inviteLink: `http://localhost:3000/accept-invitation/${data.id}`
+                });
+            }
+        }),
         passkey(),
         twoFactor({
             issuer: "My App",
