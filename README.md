@@ -43,3 +43,7 @@
     GOOGLE_CLIENT_SECRET=
     NODE_ENV=
    ```
+4. Running
+    ```bash 
+    bun dev
+    ```
