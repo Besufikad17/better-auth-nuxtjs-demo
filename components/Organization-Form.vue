@@ -41,8 +41,7 @@
             slug: slug.value,
             logo: image.value
         });
-
-        console.log(data, error);
+        
         if(data) {
             emit('success', "Organization created successfully.");
         }

@@ -137,7 +137,6 @@ export async function sendResetEmail(email: string, url: string) {
 }
 
 export async function sendVerification(email: string, url: string) {
-   console.log(email);
    const html = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html lang="en" dir="ltr">
       <table align="center" width="100%" role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width:37.5em;display:flex;flex-direction:column;justify-content:center;align-items:center;background-color:white;border:1px solid #000;border-radius:5px;padding:8px;gap:1rem;">
@@ -161,9 +160,6 @@ export async function sendVerification(email: string, url: string) {
       },
       body: html,
    };
-
-   console.log("request body ->", requestBody);
-
    const baseUrl = process.env.BETTER_AUTH_URL;
     
    try {

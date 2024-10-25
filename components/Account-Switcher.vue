@@ -10,8 +10,6 @@
         }
     });
 
-    console.log(props.sessions);
-
     const switchAccount = async(id: string) => {
         await client.multiSession.setActive({
             sessionId: id

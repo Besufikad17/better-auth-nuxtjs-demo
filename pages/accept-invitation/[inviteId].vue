@@ -20,7 +20,6 @@ import type { Invitation } from "~/types/auth";
             }
         });
 
-        console.log(data);
         if(data) {
             invitation.value = data;
         }

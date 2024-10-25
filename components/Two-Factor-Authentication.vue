@@ -13,7 +13,6 @@
     const password = ref("");
 
     const handle2FA = async() => {
-        console.log(props.action);
         isLoading.value = true;
         if(password.value === "") {
             emit('error', { message: "Password is required." });
@@ -26,7 +25,6 @@
                     res = await client.twoFactor.enable({
                         password: password.value
                     });
-                    console.log(res);
                 }else {
                     res = await client.twoFactor.disable({
                         password: password.value

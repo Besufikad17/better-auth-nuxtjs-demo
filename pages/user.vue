@@ -317,7 +317,7 @@
                         </select>                        
                     </div>
                     <div class="flex flex-col gap-2 justify-end">
-                        <button class="flex items-center gap-2 px-2 py-1 bg-primary-800 text-white dark:bg-gray-200 dark:text-black" @click="organizationModal = true">
+                        <button class="flex items-center justify-center gap-2 px-2 py-1 bg-primary-800 text-white dark:bg-gray-200 dark:text-black" @click="organizationModal = true">
                             <Icon name="lucide:plus" />
                             New Organization
                         </button>
@@ -331,8 +331,8 @@
                         <span class="text-xs">{{ activeOrganization.data?.members.length }} Memebers</span>
                     </div>
                 </div>
-                <div class="flex items-start justify-between">
-                    <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-4 sm:gap-0 sm:flex-row items-start sm:justify-between">
+                    <div class="flex flex-col gap-2 w-full sm:w-5/12">
                         <h1 class="dark:text-primary-300 font-semibold py-1 border-b border-gray-300 dark:border-gray-200">Members</h1>
                         <div v-if="activeOrganization && activeOrganization.data" v-for="(member, index) in activeOrganization.data?.members" class="flex items-center gap-3">
                             <img :src="member.user.image" class="size-12 rounded-full" />
@@ -342,7 +342,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-2 w-7/12">
+                    <div class="flex flex-col gap-2 w-full sm:w-7/12">
                         <h1 class="dark:text-primary-300 font-semibold py-1 border-b border-gray-300 dark:border-gray-200">Invites</h1>
                         <span v-if="org === 'Personal'" class="text-xs text-gray-500 dark:text-primary-700">You can't invite members to your personal workspace.</span>
                         <div v-else class="flex flex-col gap-4">

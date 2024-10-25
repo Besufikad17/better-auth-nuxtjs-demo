@@ -23,7 +23,6 @@
             if(error) {
                 throw new Error(error ? error.message : "Failed to reset password");
             }
-            console.log(data);
             showToast.value = true;
             toastType.value = "success";
             toastMessage.value = "Password reset link sent to your email";

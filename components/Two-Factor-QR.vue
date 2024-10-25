@@ -13,8 +13,6 @@
     const isDark = colorMode.value === "dark";
     const src = ref(props.value);
     const { text, copy, copied, isSupported } = useClipboard({ source: src });
-
-    console.log(props.value);
 </script>
 
 <template>
