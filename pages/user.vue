@@ -61,6 +61,14 @@
     const src = ref();
     const { text, copy, copied, isSupported } = useClipboard({ source: src });
 
+    const revokeInvitation = async (id: string) => {
+        isLoading.value = true;
+        await client.organization.cancelInvitation({
+            invitationId: id
+        });
+        isLoading.value = false;
+    }
+
     const revokeSession = async (id: string) => {
         isLoading.value = true;
         await client.user.revokeSession({ id });
@@ -338,17 +346,19 @@
                         <h1 class="dark:text-primary-300 font-semibold py-1 border-b border-gray-300 dark:border-gray-200">Invites</h1>
                         <span v-if="org === 'Personal'" class="text-xs text-gray-500 dark:text-primary-700">You can't invite members to your personal workspace.</span>
                         <div v-else class="flex flex-col gap-4">
-                            <div v-for="(invitation, index) in activeOrganization.data?.invitations" :key="index" class="flex items-start justify-between">
-                                <div class="flex flex-col gap-2 dark:text-white">
-                                    <span>{{ invitation.email }}</span>
-                                    <span class="text-xs">{{ invitation.role }}</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <button class="flex items-center justify-center px-2 py-1 bg-red-800 text-white">Revoke</button>
-                                    <button class="flex items-center justify-center bg-transparent focus:outline-none focus:ring-0 text-gray-950 dark:text-gray-300" @click="() => { src = `http://localhost:3000/accept-invitation/${invitation.id}`; copy(src) }"> 
-                                        <Icon v-if="!copied" name="lucide:copy" />
-                                        <Icon v-else name="material-symbols:done" />
-                                    </button>
+                            <div v-for="(invitation, index) in activeOrganization.data?.invitations" :key="index">
+                                <div v-if="invitation.status === 'pending'" class="flex items-start justify-between">
+                                    <div class="flex flex-col gap-2 dark:text-white">
+                                        <span>{{ invitation.email }}</span>
+                                        <span class="text-xs">{{ invitation.role }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <button class="flex items-center justify-center px-2 py-1 bg-red-800 text-white text-xs" @click="() => revokeInvitation(invitation.id)">Revoke</button>
+                                        <button class="flex items-center justify-center bg-transparent focus:outline-none focus:ring-0 text-gray-950 dark:text-gray-300" @click="() => { src = `http://localhost:3000/accept-invitation/${invitation.id}`; copy(src) }"> 
+                                            <Icon v-if="!copied" name="lucide:copy" />
+                                            <Icon v-else name="material-symbols:done" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex justify-end">
