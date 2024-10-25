@@ -1,75 +1,45 @@
-# Nuxt 3 Minimal Starter
+# Nuxt.js Better Auth Demo
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+- Demo application for <a href="">better-auth</a>.
+
+## Technologies used
+
+- [NuxtJs](https://nuxt.com/) - Frontend framework.
+- [Better Auth](https://www.better-auth.com/) - Authentication library.
+- [Headless UI](https://headlessui.com/) - Component library.
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework.
+- [nuxt-icon](https://nuxt.com/modules/icons) - Icon library.
+- [Cloudinary](https://cloudinary.com/) - File upload platform.
 
 ## Setup
 
-Make sure to install the dependencies:
+1. Clonning the repo
+   
+   ```bash
+    git clone https://github.com/Besufikad17/better-auth-nuxtjs-demo.git
+   ```
 
-```bash
-# npm
-npm install
+2. Installing npm packages
+   
+   ```bash
+    cd better-auth-nuxtjs-demo && bun install
+    ```
 
-# pnpm
-pnpm install
+3. Setting up environment variables
 
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+   ```.env
+    BETTER_AUTH_URL=
+    CLOUDINARY_CLOUD_NAME=
+    CLOUDINARY_UPLOAD_PRESET=
+    CLOUDINARY_URL=
+    DATABASE_URL=
+    DISCORD_CLIENT_ID=
+    DISCORD_CLIENT_SECRET=
+    EMAIL_USER=
+    EMAIL_PASS=
+    GITHUB_CLIENT_ID=
+    GITHUB_CLIENT_SECRET=
+    GOOGLE_CLIENT_ID=
+    GOOGLE_CLIENT_SECRET=
+    NODE_ENV=
+   ```
