@@ -1,6 +1,6 @@
 # Nuxt.js Better Auth Demo
 
-- Demo application for <a href="">better-auth</a>.
+- Nuxt.js demo to showcase <a href="https://www.better-auth.com/" target="_blank">better-auth.</a> features and capabilities.
 
 ## Technologies used
 

@@ -28,7 +28,7 @@ export const auth = betterAuth({
                     invitedByUsername: data.inviter.user.name,
                     invitedByEmail: data.inviter.user.email,
                     teamName: data.organization.name,
-                    inviteLink: `http://localhost:3000/accept-invitation/${data.id}`
+                    inviteLink: `${process.env.BETTER_AUTH_URL}/accept-invitation/${data.id}`
                 });
             }
         }),

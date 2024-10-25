@@ -12,6 +12,7 @@ export default defineNuxtConfig({
       EMAIL_PASS: process.env.EMAIL_PASS
     },
     public: {
+      BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
       CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
       CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET,
       CLOUDINARY_URL: process.env.CLOUDINARY_URL,

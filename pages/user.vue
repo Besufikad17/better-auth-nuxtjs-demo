@@ -5,6 +5,8 @@
     import { client } from "~/composables/functions/client"; 
     import type { DeviceSession, Session } from "~/types/auth";
 
+    const config = useRuntimeConfig();
+
     const activeOrganization = ref(client.useActiveOrganization());
     const orgList = ref(client.useListOrganizations());
     const session = ref(client.useSession());
@@ -354,7 +356,7 @@
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <button class="flex items-center justify-center px-2 py-1 bg-red-800 text-white text-xs" @click="() => revokeInvitation(invitation.id)">Revoke</button>
-                                        <button class="flex items-center justify-center bg-transparent focus:outline-none focus:ring-0 text-gray-950 dark:text-gray-300" @click="() => { src = `http://localhost:3000/accept-invitation/${invitation.id}`; copy(src) }"> 
+                                        <button class="flex items-center justify-center bg-transparent focus:outline-none focus:ring-0 text-gray-950 dark:text-gray-300" @click="() => { src = `${config.public.BETTER_AUTH_URL}/accept-invitation/${invitation.id}`; copy(src) }"> 
                                             <Icon v-if="!copied" name="lucide:copy" />
                                             <Icon v-else name="material-symbols:done" />
                                         </button>
