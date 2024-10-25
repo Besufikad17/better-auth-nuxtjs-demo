@@ -12,10 +12,12 @@ export const auth = betterAuth({
         async sendResetPassword(user, url) { 
             await sendResetEmail(user.email, url);
         },
+    },
+    emailVerification: {
         sendEmailVerificationOnSignUp: true,
-        async sendVerificationEmail(url: string, email: string) {
-            await sendVerification(email, url);
-        }
+        sendVerificationEmail: async (user, url, token) => {
+            await sendVerification(user.email, url);
+        },
     },
     plugins: [
         multiSession(),

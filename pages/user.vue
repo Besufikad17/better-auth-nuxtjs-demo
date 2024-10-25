@@ -7,7 +7,7 @@
 
     const activeOrganization = ref(client.useActiveOrganization());
     const orgList = ref(client.useListOrganizations());
-    const session = client.useSession();
+    const session = ref(client.useSession());
     const deviceSessions = ref<DeviceSession[]>([]);
 
     const isLoading = ref(false);
@@ -332,7 +332,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-4 sm:gap-0 sm:flex-row items-start sm:justify-between">
-                    <div class="flex flex-col gap-2 w-full sm:w-5/12">
+                    <div class="flex flex-col gap-2 w-full sm:w-4/12">
                         <h1 class="dark:text-primary-300 font-semibold py-1 border-b border-gray-300 dark:border-gray-200">Members</h1>
                         <div v-if="activeOrganization && activeOrganization.data" v-for="(member, index) in activeOrganization.data?.members" class="flex items-center gap-3">
                             <img :src="member.user.image" class="size-12 rounded-full" />
