@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { client } from "~/composables/functions/client";
+    import { client } from "~/composables/auth/client";
     import type { DeviceSession } from "~/types/auth";
 
     const session = client.useSession();

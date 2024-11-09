@@ -2,7 +2,7 @@
     import { ref, onMounted } from "vue";
     import { useClipboard } from "@vueuse/core";
     import { UAParser } from "ua-parser-js";
-    import { client } from "~/composables/functions/client"; 
+    import { client } from "~/composables/auth/client"; 
     import type { DeviceSession, Session } from "~/types/auth";
 
     const config = useRuntimeConfig();

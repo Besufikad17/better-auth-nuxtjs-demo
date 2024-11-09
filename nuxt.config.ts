@@ -18,5 +18,6 @@ export default defineNuxtConfig({
       CLOUDINARY_URL: process.env.CLOUDINARY_URL,
       NODE_ENV: process.env.NODE_ENV
     }
-  }
+  },
+  ssr: false
 });

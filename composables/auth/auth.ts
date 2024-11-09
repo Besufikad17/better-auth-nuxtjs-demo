@@ -1,15 +1,15 @@
 import Pool from "pg-pool";
 import { betterAuth } from "better-auth";
-import {  multiSession, organization, passkey, twoFactor } from "better-auth/plugins";
-import { sendInvitationEmail, sendOTP, sendResetEmail, sendVerification } from "./email";
+import { multiSession, organization, passkey, twoFactor } from "better-auth/plugins";
+import { sendInvitationEmail, sendOTP, sendResetEmail, sendVerification } from "../functions/email";
 
 export const auth = betterAuth({
     database: new Pool({
         connectionString: process.env.DATABASE_URL as string
     }),
-    emailAndPassword: {  
+    emailAndPassword: {
         enabled: true,
-        async sendResetPassword(user, url) { 
+        async sendResetPassword(user, url) {
             await sendResetEmail(user.email, url);
         },
     },
@@ -36,10 +36,10 @@ export const auth = betterAuth({
         twoFactor({
             issuer: "My App",
             otpOptions: {
-				async sendOTP(user, otp) {
-                   await sendOTP(user.email, otp);
-				},
-			},
+                async sendOTP(user, otp) {
+                    await sendOTP(user.email, otp);
+                },
+            },
         })
     ],
     socialProviders: {
@@ -47,13 +47,13 @@ export const auth = betterAuth({
             clientId: process.env.DISCORD_CLIENT_ID as string,
             clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
         },
-        github: { 
-            clientId: process.env.GITHUB_CLIENT_ID as string, 
-            clientSecret: process.env.GITHUB_CLIENT_SECRET as string, 
-        }, 
-        google: { 
-            clientId: process.env.GOOGLE_CLIENT_ID as string, 
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
-        }, 
+        github: {
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        },
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        },
     },
 }); 

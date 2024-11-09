@@ -1,4 +1,4 @@
-import { client } from "~/composables/functions/client";
+import { client } from "~/composables/auth/client";
 
 export type ActiveOrganization = {
     data: typeof client.$Infer.ActiveOrganization;

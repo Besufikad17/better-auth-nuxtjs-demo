@@ -16,10 +16,11 @@ export const client = createAuthClient({
 function getBaseURL() {
     let baseURL = process.env.BETTER_AUTH_URL
     if (!baseURL) {
-      try {
-        baseURL = getRequestURL(useEvent()).origin
-      }
-      catch (e) {}
+        try {
+            baseURL = getRequestURL(useEvent()).origin
+        }
+        catch (e) { }
     }
+    console.log("baseURL ->", baseURL);
     return baseURL
 }

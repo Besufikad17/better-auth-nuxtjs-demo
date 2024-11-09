@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { client } from "~/composables/functions/client"; 
+    import { client } from "~/composables/auth/client"; 
 
     const emit = defineEmits(['error', 'success']);
     const props = defineProps({
